@@ -132,3 +132,12 @@
 			new /obj/item/food/breadslice/moldy/bacteria(src)
 	else if(prob(30))
 		new /obj/item/food/syndicake(src)
+
+/obj/structure/closet/mini_fridge/brandnew
+	name = "mini-fridge"
+	desc = "A small outdated design mini fridge, however this antiquated unit seems to have been brought back into spec to hold all of your various drinks and meals."
+
+/obj/structure/closet/mini_fridge/brandnew/PopulateContents()
+	new /obj/effect/spawner/random/food_or_drink/refreshing_beverage(src)
+	new /obj/effect/spawner/random/food_or_drink/refreshing_beverage(src)
+	new /obj/effect/spawner/random/food_or_drink/refreshing_beverage(src)

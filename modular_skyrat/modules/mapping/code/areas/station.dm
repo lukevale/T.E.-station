@@ -37,6 +37,9 @@
 	icon = 'modular_skyrat/modules/mapping/icons/areas/areas_station.dmi'
 	icon_state = "blueshield"
 
+// Break Room
+/area/command/breakroom
+	name = "Command Break Room"
 /*
 * Department areas
 */
