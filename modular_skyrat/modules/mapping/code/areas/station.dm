@@ -38,7 +38,7 @@
 	icon_state = "blueshield"
 
 // Break Room
-/area/command/breakroom
+/area/station/command/breakroom
 	name = "Command Break Room"
 /*
 * Department areas
