@@ -11,3 +11,11 @@
 /datum/map_template/ghost_cafe_rooms
 	name = "Apartment"
 	mappath = "modular_skyrat/modules/hotel_rooms/apartment.dmm"
+
+
+/datum/map_template/miyako_apartment
+	name = "Miyako's Apartment"
+	mappath = "modular_skyrat/modules/hotel_rooms/miyako_apartment.dmm"
+
+/obj/item/hilbertshotel/miyako
+	name = "Apartment Orb"

@@ -8,10 +8,11 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	//SKYRAT EDIT ADDITION - GHOST HOTEL UPDATE
-	var/list/static/hotel_maps = list("Generic", "Apartment")
+	var/list/static/hotel_maps = list("Generic", "Apartment", "Miyako's Apartment")
 	//standart - hilber's hotel room
 	//apartment - see /datum/map_template/ghost_cafe_rooms
 	var/datum/map_template/ghost_cafe_rooms/ghost_cafe_rooms_apartment
+	var/datum/map_template/miyako_apartment/ghost_cafe_miyako_apartment
 	//SKYRAT EDIT END
 	var/datum/map_template/hilbertshotel/hotelRoomTemp
 	var/datum/map_template/hilbertshotel/empty/hotelRoomTempEmpty
@@ -33,6 +34,7 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 	hotelRoomTempLore = new()
 	//SKYRAT EDIT ADDITION - GHOST HOTEL UPDATE
 	ghost_cafe_rooms_apartment = new()
+	ghost_cafe_miyako_apartment = new()
 	//SKYRAT EDIT END
 	var/area/currentArea = get_area(src)
 	if(currentArea.type == /area/ruin/space/has_grav/powered/hilbertresearchfacility/secretroom)
@@ -61,19 +63,22 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 	var/chosenRoomNumber
 
 	// Input text changes depending on if you're using this in yourself or someone else.
-	if(user == target)
-		chosenRoomNumber = input(target, "What number room will you be checking into?", "Room Number") as null|num
-	else
-		chosenRoomNumber = input(target, "[user] is inviting you to enter \the [src]. What number room will you be checking into?", "Room Number") as null|num
+	if(!istype(src, /obj/item/hilbertshotel/miyako))
+		if(user == target)
+			chosenRoomNumber = input(target, "What number room will you be checking into?", "Room Number") as null|num
+		else
+			chosenRoomNumber = input(target, "[user] is inviting you to enter \the [src]. What number room will you be checking into?", "Room Number") as null|num
 
-	if(!chosenRoomNumber)
-		return
-	if(chosenRoomNumber > SHORT_REAL_LIMIT)
-		to_chat(target, span_warning("You have to check out the first [SHORT_REAL_LIMIT] rooms before you can go to a higher numbered one!"))
-		return
-	if((chosenRoomNumber < 1) || (chosenRoomNumber != round(chosenRoomNumber)))
-		to_chat(target, span_warning("That is not a valid room number!"))
-		return
+		if(!chosenRoomNumber)
+			return
+		if(chosenRoomNumber > SHORT_REAL_LIMIT)
+			to_chat(target, span_warning("You have to check out the first [SHORT_REAL_LIMIT] rooms before you can go to a higher numbered one!"))
+			return
+		if((chosenRoomNumber < 1) || (chosenRoomNumber != round(chosenRoomNumber)))
+			to_chat(target, span_warning("That is not a valid room number!"))
+			return
+	else
+		chosenRoomNumber = 1
 
 	// Orb is not adjacent to the target. No teleporties.
 	if(!src.Adjacent(target))
@@ -105,7 +110,9 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 
 	//SKYRAT EDIT ADDITION - GHOST HOTEL UPDATE
 	var/chosen_room = "Nothing"
-	if(istype(src, /obj/item/hilbertshotel/ghostdojo)) //to don't add another one var
+	if(istype(src, /obj/item/hilbertshotel/miyako))
+		chosen_room = "Miyako's Apartment"
+	else if(istype(src, /obj/item/hilbertshotel/ghostdojo)) //to don't add another one var
 		chosen_room = tgui_input_list(user, "Choose desired room:", "Time to choose", hotel_maps)
 	//SKYRAT EDIT END
 	if(!storageTurf) //Blame subsystems for not allowing this to be in Initialize
@@ -161,6 +168,9 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 		switch(chosen_room)
 			if("Apartment")
 				ghost_cafe_rooms_apartment.load(locate(roomReservation.bottom_left_coords[1], roomReservation.bottom_left_coords[2], roomReservation.bottom_left_coords[3]))
+			if("Miyako's Apartment")
+				roomReservation = SSmapping.RequestBlockReservation(ghost_cafe_miyako_apartment.width, ghost_cafe_miyako_apartment.height)
+				ghost_cafe_miyako_apartment.load(locate(roomReservation.bottom_left_coords[1], roomReservation.bottom_left_coords[2], roomReservation.bottom_left_coords[3]))
 			else
 	//SKYRAT EDIT END
 				hotelRoomTemp.load(locate(roomReservation.bottom_left_coords[1], roomReservation.bottom_left_coords[2], roomReservation.bottom_left_coords[3]))
@@ -432,7 +442,7 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 				if(L.mind)
 					stillPopulated = TRUE
 					break
-			if(!stillPopulated)
+			if ((!stillPopulated) && (!istype(parentSphere, /obj/item/hilbertshotel/miyako)))
 				storeRoom()
 
 /area/misc/hilbertshotel/proc/storeRoom()
