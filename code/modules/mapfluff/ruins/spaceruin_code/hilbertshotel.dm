@@ -133,7 +133,10 @@ GLOBAL_VAR_INIT(hhMysteryRoomNumber, rand(1, 999999))
 	if(activeRooms["[roomNumber]"])
 		var/datum/turf_reservation/roomReservation = activeRooms["[roomNumber]"]
 		do_sparks(3, FALSE, get_turf(user))
-		user.forceMove(locate(roomReservation.bottom_left_coords[1] + hotelRoomTemp.landingZoneRelativeX, roomReservation.bottom_left_coords[2] + hotelRoomTemp.landingZoneRelativeY, roomReservation.bottom_left_coords[3]))
+		if(istype(src, /obj/item/hilbertshotel/miyako))
+			user.forceMove(locate(roomReservation.bottom_left_coords[1] + ghost_cafe_miyako_apartment.landingZoneRelativeX, ghost_cafe_miyako_apartment.bottom_left_coords[2] + ghost_cafe_miyako_apartment.landingZoneRelativeY, roomReservation.bottom_left_coords[3]))
+		else
+			user.forceMove(locate(roomReservation.bottom_left_coords[1] + hotelRoomTemp.landingZoneRelativeX, roomReservation.bottom_left_coords[2] + hotelRoomTemp.landingZoneRelativeY, roomReservation.bottom_left_coords[3]))
 		return TRUE
 	return FALSE
 

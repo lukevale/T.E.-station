@@ -16,8 +16,8 @@
 /datum/map_template/miyako_apartment
 	name = "Miyako's Apartment"
 	mappath = "modular_skyrat/modules/hotel_rooms/miyako_apartment.dmm"
-	landingZoneRelativeX = 15
-	landingZoneRelativeY = 23
+	var/landingZoneRelativeX = 15
+	var/landingZoneRelativeY = 23
 
 /obj/item/hilbertshotel/miyako
 	name = "Apartment Orb"
